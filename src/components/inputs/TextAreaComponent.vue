@@ -1,0 +1,39 @@
+<template>
+  <textarea name="textarea" rows="5" cols="10" maxlength="600" :placeholder="props.placeholder">{{ props.value }}</textarea>
+</template>
+
+<style scoped>
+  textarea {
+    resize: none;
+    padding: 2px;
+    outline: 0;
+  }
+</style>
+
+<script setup lang="js">
+
+import { defineProps } from 'vue';
+
+const props = defineProps({
+  placeholder: {
+    default: '',
+    type: String
+  },
+  value: {
+    default: '',
+    type: String
+  },
+  options: {
+    default: [],
+    type: Array
+  },
+  mode: {
+    default: 'read',
+    type: String
+  },
+  required: {
+    default: false,
+    type: Boolean
+  }
+});
+</script>

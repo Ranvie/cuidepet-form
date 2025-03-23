@@ -1,7 +1,14 @@
 <template>
     <div class="card">
       <h2>{{ props.index }}. {{ props.title }}</h2>
-      <textBoxComponent />
+      <component 
+        :is="getInput(props.type)" 
+        :placeholder="props.placeholder"
+        :value="props.value"
+        :mode="props.mode"
+        :required="props.required"
+        :options="props.options"
+      ></component>
     </div>
 </template>
 
@@ -9,16 +16,26 @@
 .card {
   display: flex;
   flex-direction: column;
-  padding: 10px 20px;
-  margin: 10px;
-  width: 100%;
+  margin-bottom: 30px;
+}
+
+h2 {
+  font-size: 0.95em;
+}
+
+input {
+  margin-left: 22px;
 }
 </style>
 
 <script setup lang="js">
-import { defineProps } from 'vue';
-import TextBoxComponent from '@/components/inputs/TextBoxComponent.vue';
 
+import { defineProps, ref, onMounted } from 'vue';
+
+import TextComponent     from '@/components/inputs/TextComponent.vue';
+import TextAreaComponent from '@/components/inputs/TextAreaComponent.vue';
+
+const inputProps = ref();
 const props = defineProps({
   type: {
     default: 'text',
@@ -51,4 +68,32 @@ const props = defineProps({
     type: String
   }
 })
+
+onMounted(() => {
+  inputProps.value = filterKeys(props.value, ["options", "value", "placeholder", "required", "mode"]);
+})
+
+function setInputs(){
+  const inputs = [];
+  inputs['text']        = TextComponent;
+  inputs['textarea']    = TextAreaComponent;
+  inputs['number']      = TextComponent;
+  inputs['checkbox']    = TextComponent;
+  inputs['radio']       = TextComponent;
+  inputs['dropdown']    = TextComponent;
+  inputs['date']        = TextComponent;
+  inputs['selectInput'] = TextComponent;
+
+  return inputs;
+}
+
+function getInput(input) {
+  const inputs = setInputs();
+
+  return inputs[input];
+}
+
+function filterKeys(object, keys = []) {
+  return Object.entries(object).filter(key => !keys.includes(key));
+}
 </script>

@@ -4,8 +4,10 @@
 
 <style scoped>
 input {
-  border-bottom: 0.5 solid black;
-  padding: 13px;
+  border: 0;
+  border-bottom: 1px solid gray;
+  padding: 2px;
+  outline: 0;
 }
 </style>
 
@@ -15,13 +17,24 @@ import { defineProps } from 'vue';
 
 const props = defineProps({
   placeholder: {
+    default: '',
     type: String
   },
   value: {
+    default: '',
     type: String
   },
+  options: {
+    default: [],
+    type: Array
+  },
   mode: {
+    default: 'read',
     type: String
+  },
+  required: {
+    default: false,
+    type: Boolean
   }
 });
 </script>
