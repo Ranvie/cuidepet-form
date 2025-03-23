@@ -1,15 +1,14 @@
 <template>
-  <textarea name="textarea" rows="5" cols="10" maxlength="600" :placeholder="props.placeholder">{{ props.value }}</textarea>
+  <input type="number" :placeholder="props.placeholder" :value="props.value"></input>
 </template>
 
 <style scoped>
-  textarea {
-    resize: none;
-    padding: 10px;
-    border: 0;
-    border-radius: 0.4em;
-    outline: 1px solid gray;
-  }
+input {
+  border: 0;
+  border-bottom: 1px solid gray;
+  padding: 2px;
+  outline: 0;
+}
 </style>
 
 <script setup lang="js">
