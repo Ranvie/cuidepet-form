@@ -37,12 +37,14 @@ h2 {
 
 import { defineProps } from 'vue';
 
-import TextComponent     from '@/components/inputs/TextComponent.vue';
-import TextAreaComponent from '@/components/inputs/TextAreaComponent.vue';
-import NumberComponent   from '@/components/inputs/NumberComponent.vue';
-import CheckboxComponent from '@/components/inputs/CheckboxComponent.vue';
-import RadioComponent    from '@/components/inputs/RadioComponent.vue';
-import DropdownComponent from '@/components/inputs/DropdownComponent.vue';
+import TextComponent        from '@/components/inputs/TextComponent.vue';
+import TextAreaComponent    from '@/components/inputs/TextAreaComponent.vue';
+import NumberComponent      from '@/components/inputs/NumberComponent.vue';
+import CheckboxComponent    from '@/components/inputs/CheckboxComponent.vue';
+import RadioComponent       from '@/components/inputs/RadioComponent.vue';
+import DropdownComponent    from '@/components/inputs/DropdownComponent.vue';
+import DateComponent        from '@/components/inputs/DateComponent.vue';
+import SelectInputComponent from '@/components/inputs/SelectInputComponent.vue';
 
 const props = defineProps({
   type: {
@@ -85,8 +87,8 @@ function setInputs(){
   inputs['checkbox']    = CheckboxComponent;
   inputs['radio']       = RadioComponent;
   inputs['dropdown']    = DropdownComponent;
-  inputs['date']        = TextComponent;
-  inputs['selectInput'] = TextComponent;
+  inputs['date']        = DateComponent;
+  inputs['selectInput'] = SelectInputComponent;
 
   return inputs;
 }

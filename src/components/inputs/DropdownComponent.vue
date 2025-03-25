@@ -1,6 +1,6 @@
 <template>
   <div ref="select" class="custom-select">
-    <div ref="selected" class="selected">{{ props.placeholder }}</div>
+    <div ref="selected" class="selected"></div>
     <div ref="optionsDiv" class="options">
       <div ref="options" v-for="(option, index) in propOptions" class="option">{{ option }}</div>
       <input ref="newOptionInput" type="text" placeholder="Nova opção..." class="custom-input">
@@ -103,6 +103,7 @@ onMounted(() => {
   setOnSelectClick();
   setOnNewOptionInput();
   setOnOptionClick();
+  getInitialValue();
 })
 
 watch(propOptions, (newVal, oldVal) => {
@@ -145,6 +146,14 @@ function setInputOptionListeners() {
       selected.value.textContent = option.textContent;
     });
   }
+}
+
+function getInitialValue() {
+  setTimeout(() => {
+    if (propOptions.value.includes(props.value)) { selected.value.textContent = props.value; return; }
+  
+    selected.value.textContent = props.placeholder;
+  }, 1)
 }
 
 </script>
