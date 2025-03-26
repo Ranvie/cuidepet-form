@@ -5,7 +5,7 @@
         <input v-model="searchValue" type="text" :onkeyup="updateFilter()" placeholder="Procurar...">
       </div>
       <ul>
-        <li v-for="option in propOptions">{{ option }}</li>
+        <li v-for="option in visibleOptions">{{ option }}</li>
       </ul>
     </div>
   </div>
@@ -52,8 +52,10 @@
 <script setup lang="js">
 import { defineProps, onMounted, ref } from 'vue';
 
-const searchValue = ref();
-const propOptions = ref();
+const options        = ref(["Texto","Texto longo","Número","Caixa de seleção","Escolha única","Lista suspensa","Data"]);
+const searchValue    = ref();
+const visibleOptions = ref();
+
 const props = defineProps({
   placeholder: {
     default: '',
@@ -78,13 +80,13 @@ const props = defineProps({
 });
 
 onMounted(() => {
-  propOptions.value = props.options;
+  visibleOptions.value = options.value;
 })
 
 function updateFilter() {
-  if(!searchValue.value) { propOptions.value = props.options; return; };
+  if(!searchValue.value) { visibleOptions.value = options.value; return; };
 
-  propOptions.value = props.options.filter(item => normalize(item).includes(normalize(searchValue.value)));
+  visibleOptions.value = options.value.filter(item => normalize(item).includes(normalize(searchValue.value)));
 }
 
 function normalize(text) {

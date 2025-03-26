@@ -1,6 +1,10 @@
 <template>
     <div class="card">
-      <h2>{{ props.index }}. {{ props.title }}</h2>
+      <div class="title">
+        <p>X</p>
+        <h2>{{ props.inputIndex+1 }}. {{ props.title }}</h2>
+        <a v-on:click="emits('changeInput', props.inputIndex, props.pageIndex)">Alterar tipo de questionário</a>
+      </div>
       <component 
         :is="getInput(props.type)"
         :placeholder="props.placeholder"
@@ -23,19 +27,47 @@
   margin-bottom: 30px;
 }
 
-h2 {
-  font-size: 0.95em;
-}
-
 .input {
   margin-left: var(--input-spacing) !important;
   width: 100%;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.title h2 {
+  font-size: 0.95em;
+}
+
+.title p {
+  user-select: none;
+  cursor: pointer;
+  font-weight: bolder;
+  color: gray;
+}
+
+.title p:hover {
+  color: red;
+}
+
+.title a {
+  text-decoration: underline;
+  color: #679DFF;
+  font-size: 0.7em;
+  user-select: none;
+}
+
+.title a:hover {
+  cursor: pointer;
 }
 </style>
 
 <script setup lang="js">
 
-import { defineProps } from 'vue';
+import { defineProps, defineEmits } from 'vue';
 
 import TextComponent        from '@/components/inputs/TextComponent.vue';
 import TextAreaComponent    from '@/components/inputs/TextAreaComponent.vue';
@@ -69,14 +101,23 @@ const props = defineProps({
     default: false,
     type: Boolean
   },
-  index: {
+  inputIndex: {
     default: 1,
+    type: Number
+  },
+  pageIndex: {
+    default: 0,
     type: Number
   },
   mode: {
     default: 'read',
     type: String
   }
+})
+
+const emits = defineEmits({
+  changeInput: Number,
+  deleteQuestion: Number
 })
 
 function setInputs(){
@@ -88,7 +129,6 @@ function setInputs(){
   inputs['radio']       = RadioComponent;
   inputs['dropdown']    = DropdownComponent;
   inputs['date']        = DateComponent;
-  inputs['selectInput'] = SelectInputComponent;
 
   return inputs;
 }
@@ -96,6 +136,6 @@ function setInputs(){
 function getInput(input) {
   const inputs = setInputs();
 
-  return inputs[input];
+  return inputs[input] ?? SelectInputComponent;
 }
 </script>

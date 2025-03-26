@@ -4,6 +4,7 @@
       {{ option }}
       <input type="checkbox" :checked="isChecked(option)">
       <span class="checkmark"></span>
+      <span class="delete">X</span>
     </label>
     <input class="form-check-add" type="button" value="+">
   </div>
@@ -83,6 +84,10 @@ label {
   line-height: 0.6em;
   margin: 0;
   padding: 0;
+}
+
+.delete {
+  
 }
 </style>
 

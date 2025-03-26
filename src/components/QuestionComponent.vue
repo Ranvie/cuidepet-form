@@ -1,9 +1,9 @@
 <template>
   <form class="form-container">
-    <section v-for="page in pages" class="page-card">
+    <section v-for="(page, pageIndex) in pages" class="page-card">
       <h1>{{ page.title }}</h1>
       <InputComponent v-for="(input, index) in page.inputs" :type="input.type" :title="input.title" :options="input.options" 
-        :value="input.value" :placeholder="input.placeholder" :required="input.required" :index="index+1" :mode="props.mode" />
+        :value="input.value" :placeholder="input.placeholder" :required="input.required" :inputIndex="index" :pageIndex="pageIndex" :mode="props.mode" v-on:change-input="changeInput"/>
       <div class="flex-end margin-top">
         <button>Cancelar</button>
         <button type="submit">Enviar</button>
@@ -66,7 +66,6 @@
 
 <script setup lang="js">
 import { defineProps, ref, onMounted } from 'vue';
-
 import InputComponent from '@/components/InputComponent.vue';
 
 const pages = ref();
@@ -85,4 +84,12 @@ const props = defineProps({
 onMounted(() => {
   pages.value = JSON.parse(props.jsonForm)?.pages ?? [];
 })
+
+function changeInput(inputIndex, pageIndex) {
+  pages.value[pageIndex].inputs[inputIndex] = getNewInputSelector();
+}
+
+function getNewInputSelector() {  
+  return { "title": "Selecione o tipo de questionário", "type": "" };
+}
 </script>
