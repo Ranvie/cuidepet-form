@@ -1,72 +1,24 @@
 <template>
   <div>
-    <label v-for="(option, index) in props.options" class="container">
-      {{ option }}
-      <input type="radio" :checked="isChecked(option)" :name="'radio-'+uid">
-      <span class="radio"></span>
-    </label>
-    <input class="form-check-add" type="button" value="+">
+    <div class="custom-control custom-radio" v-for="(option, index) in props.options">
+      <input type="radio" class="custom-control-input" :name="'radio-'+uid" :id="'checkbox-'+uid+'-'+index" :checked="isChecked(option)">
+      <label class="custom-control-label" :for="'checkbox-'+uid+'-'+index">{{ option }}</label>
+    </div>
   </div>
 </template>
 
 <style scoped>
-label {
-  width: fit-content;
-}
-
-.container {
-  display: block;
-  position: relative;
-  padding-left: 25px;
-  margin-bottom: 5px;
-  cursor: pointer;
-  font-size: 22px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  font-size: 1em;
-  color: gray;
-  font-weight: 500;
-}
-
-.container input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-  height: 0;
-  width: 0;
-}
-
-.radio {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  height: 1.1em;
-  width: 1.1em;
+.custom-control-label::before {
   background-color: transparent;
-  border: 2px solid #9E9E9E;
-  border-radius: 50%;
-  transform: translateY(-50%);
+  border: 2px solid gray;
 }
 
-.radio:after {
-  content: "";
-  position: absolute;
-  display: none;
+.custom-control-input:checked~.custom-control-label::before {
+  background-color: transparent;
 }
 
-.container input:checked ~ .radio:after {
-  display: block;
-}
-
-.container .radio:after {
-  top: 0.13em;
-  left: 0.125em;
-	width: 10px;
-	height: 10px;
-	border-radius: 50%;
-	background: black;
+.custom-radio .custom-control-input:checked~.custom-control-label::after {
+  background-image: url('../icons/radio-checked.svg');
 }
 
 .form-check-add {

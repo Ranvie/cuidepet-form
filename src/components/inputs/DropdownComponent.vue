@@ -1,5 +1,5 @@
 <template>
-  <div ref="select" class="custom-select">
+  <div ref="select" class="select-custom">
     <div ref="selected" class="selected"></div>
     <div ref="optionsDiv" class="options">
       <div ref="options" v-for="(option, index) in propOptions" class="option">{{ option }}</div>
@@ -9,7 +9,7 @@
 </template>
 
 <style scoped>
-.custom-select {
+.select-custom {
   position: relative;
   width: 200px;
   height: 40px;
@@ -21,7 +21,7 @@
   user-select: none;
 }
 
-.custom-select::after {
+.select-custom::after {
   content: "▼";
   position: absolute;
   right: 10px;

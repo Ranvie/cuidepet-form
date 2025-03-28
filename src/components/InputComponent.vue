@@ -1,5 +1,5 @@
 <template>
-    <div class="card">
+    <div class="form-card">
       <div class="title">
         <p>X</p>
         <h2>{{ props.inputIndex+1 }}. {{ props.title }}</h2>
@@ -18,9 +18,7 @@
 </template>
 
 <style scoped>
-
-
-.card {
+.form-card {
   display: flex;
   flex-direction: column;
   margin-right: var(--input-spacing) !important;
@@ -34,12 +32,12 @@
 
 .title {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 15px;
 }
 
 .title h2 {
-  font-size: 0.95em;
+  font-size: 0.95em !important;
 }
 
 .title p {
