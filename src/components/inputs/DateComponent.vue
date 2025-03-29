@@ -1,5 +1,5 @@
 <template>
-  <input type="date" name="text" :value="props.value"></input>
+  <input type="date" name="text" :value="props.value" :disabled="props.mode == 'edit' || props.mode == 'read'"></input>
 </template>
 
 <style scoped>
@@ -7,6 +7,7 @@
     padding: 5px 10px;
     border: 1px solid gray;
     border-radius: 0.4em;
+    font-size: 0.8rem;
   }
 
   input:focus {

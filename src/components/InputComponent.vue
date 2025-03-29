@@ -134,6 +134,6 @@ function setInputs(){
 function getInput(input) {
   const inputs = setInputs();
 
-  return inputs[input] ?? SelectInputComponent;
+  return inputs[input.toLowerCase()] ?? SelectInputComponent;
 }
 </script>

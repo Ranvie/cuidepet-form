@@ -1,5 +1,5 @@
 <template>
-  <textarea name="textarea" rows="5" cols="10" maxlength="600" :placeholder="props.placeholder">{{ props.value }}</textarea>
+  <textarea name="textarea" rows="5" cols="10" maxlength="600" :placeholder="props.placeholder" :disabled="props.mode == 'edit' || props.mode == 'read'">{{ props.value }}</textarea>
 </template>
 
 <style scoped>

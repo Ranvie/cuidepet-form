@@ -1,9 +1,12 @@
 <template>
-  <div ref="select" class="select-custom">
+  <div ref="select" class="select-custom" :class="props.mode == 'read' ? 'disabled' : ''">
     <div ref="selected" class="selected"></div>
     <div ref="optionsDiv" class="options">
-      <div ref="options" v-for="(option, index) in propOptions" class="option">{{ option }}</div>
-      <input ref="newOptionInput" type="text" placeholder="Nova opção..." class="custom-input">
+      <div ref="options" v-for="(option, index) in propOptions" class="option">
+        <span v-on:click="(e) => { e.stopPropagation();remove(index) }" class="delete" v-if="props.mode == 'edit'">X</span>
+        <span>{{ option }}</span>
+      </div>
+      <input ref="newOptionInput" type="text" placeholder="Nova opção..." class="custom-input" v-if="props.mode == 'edit'">
     </div>
   </div>
 </template>
@@ -30,6 +33,15 @@
   pointer-events: none;
   font-size: 14px;
   color: #666;
+}
+
+.disabled {
+  background-color: #fafafa;
+  cursor: auto;
+}
+
+.disabled::after {
+  content: "";
 }
 
 .selected {
@@ -61,6 +73,16 @@
 .custom-input {
   border: none;
   outline: none;
+}
+
+.delete {
+  position: relative;
+  margin-right: 10px;
+}
+
+.delete:hover {
+  color: red;
+  cursor: pointer;
 }
 </style>
 
@@ -100,13 +122,24 @@ const props = defineProps({
 onMounted(() => {
   propOptions.value = props.options;
 
-  setOnSelectClick();
-  setOnNewOptionInput();
-  setOnOptionClick();
+  switch(props.mode) {
+    case 'answer':
+      setOnSelectClick();
+      setOnOptionClick();
+      break;
+
+    case 'edit':
+      setOnSelectClick();
+      setOnNewOptionInput();
+      break;
+  }
+
   getInitialValue();
 })
 
 watch(propOptions, (newVal, oldVal) => {
+  if(props.mode != 'answer') return;
+
   setTimeout(() => {
     setInputOptionListeners();
   }, 1)
@@ -154,6 +187,10 @@ function getInitialValue() {
   
     selected.value.textContent = props.placeholder;
   }, 1)
+}
+
+function remove(index) {
+  propOptions.value.splice(index, 1);
 }
 
 </script>

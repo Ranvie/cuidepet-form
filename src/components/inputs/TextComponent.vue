@@ -1,5 +1,5 @@
 <template>
-  <input type="text" name="text" :placeholder="props.placeholder" :value="props.value"></input>
+  <input type="text" name="text" :placeholder="props.placeholder" :value="props.value" :disabled="props.mode == 'edit' || props.mode == 'read'"></input>
 </template>
 
 <style scoped>

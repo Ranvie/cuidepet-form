@@ -1,11 +1,12 @@
 <template>
   <div>
     <div class="custom-control custom-checkbox" v-for="(option, index) in propOptions">
-      <span class="delete" v-on:click="remove(index)">X</span>
-      <input type="checkbox" class="custom-control-input" :id="'checkbox-'+uid+'-'+index" :checked="isChecked(option)">
-      <label class="custom-control-label" :for="'checkbox-'+uid+'-'+index">{{ option }}</label>
+      <span class="delete" v-on:click="remove(index)" v-if="props.mode == 'edit'">X</span>
+      <input type="checkbox" class="custom-control-input" :id="'checkbox-'+uid+'-'+index" :checked="props.mode != 'edit' && isChecked(option)" :disabled="props.mode == 'edit' || props.mode == 'read'">
+      <label class="custom-control-label" :for="'checkbox-'+uid+'-'+index">{{ props.mode == 'answer' || props.mode == 'read' ? option : '' }}</label>
+      <input v-if="props.mode === 'edit'" type="text" v-model="propOptions[index]">
     </div>
-    <div class="add" v-on:click="add()">
+    <div class="add" v-on:click="add()" v-if="props.mode == 'edit'">
       <div class="add-plus"></div>
       <div class="add-label">Adicionar</div>
     </div>
@@ -13,6 +14,19 @@
 </template>
 
 <style scoped>
+input[type="text"] {
+  position: relative;
+  border: none;
+  background-color: transparent;
+  width: fit-content;
+  left: -11px;
+}
+
+input[type="text"]:focus {
+  outline: 0;
+  border-bottom: 1px solid black;
+}
+
 .custom-container {
   display: flex;
   flex-direction: column;
@@ -29,6 +43,10 @@
 
 .custom-checkbox .custom-control-input:checked~.custom-control-label::after {
   background-image: url('../icons/checkbox-checked.svg');
+}
+
+.custom-checkbox .custom-control-input:disabled:checked~.custom-control-label::before {
+  background-color: #e9ecef;
 }
 
 .form-check-add {
@@ -57,7 +75,9 @@
 .add {
   display: flex;
   align-items: center;
-  gap: 17px;
+  gap: 8px;
+  cursor: pointer;
+  width: fit-content;
 }
 
 .add-plus {
