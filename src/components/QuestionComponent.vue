@@ -2,7 +2,7 @@
   <form class="form-container">
     <section v-for="(page, pageIndex) in pages" class="page-card">
       <h1>{{ page.title }}</h1>
-      <InputComponent v-for="(input, index) in page.inputs" :type="input.type" :title="input.title" :options="input.options" 
+      <InputComponent v-for="(input, index) in page.inputs" :type="input.type" :title="input.title" :options="input.options"
         :value="input.value" :placeholder="input.placeholder" :required="input.required" :inputIndex="index" :pageIndex="pageIndex" :mode="props.mode" v-on:change-input="changeInput"/>
       <div class="flex-end margin-top">
         <button>Cancelar</button>
