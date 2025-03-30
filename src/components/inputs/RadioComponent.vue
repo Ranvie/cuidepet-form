@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class="custom-control custom-radio" v-for="(option, index) in propOptions">
+    <div class="form-check" v-for="(option, index) in propOptions">
       <span class="delete" v-on:click="remove(index)" v-if="props.mode == 'edit'">X</span>
-      <input type="radio" class="custom-control-input" :name="'radio-'+uid" :id="'checkbox-'+uid+'-'+index" :checked="props.mode != 'edit' && isChecked(option)" :disabled="props.mode == 'edit' || props.mode == 'read'">
-      <label class="custom-control-label" :for="'checkbox-'+uid+'-'+index">{{ props.mode == 'answer' || props.mode == 'read' ? option : '' }}</label>
+      <input type="radio" class="form-check-input" :name="'radio-'+uid" :id="'checkbox-'+uid+'-'+index" :checked="props.mode != 'edit' && isChecked(option)" :disabled="props.mode != 'answer'">
+      <label class="form-check-label" :for="'checkbox-'+uid+'-'+index">{{ props.mode != 'edit' ? option : '' }}</label>
       <input v-if="props.mode === 'edit'" type="text" v-model="propOptions[index]">
     </div>
     <div class="add" v-on:click="add()" v-if="props.mode == 'edit'">
@@ -27,34 +27,17 @@ input[type="text"]:focus {
   border-bottom: 1px solid black;
 }
 
-.custom-control-label::before {
-  background-color: transparent;
-  border: 2px solid gray;
+.form-check-input {
+  border: 1px solid gray;
+  background-size: 0.6rem;
 }
 
-.custom-control-input:checked~.custom-control-label::before {
+.form-check-input:checked {
   background-color: transparent;
 }
 
-.custom-radio .custom-control-input:checked~.custom-control-label::after {
+.form-check-input:checked[type=radio] {
   background-image: url('../icons/radio-checked.svg');
-}
-
-.custom-radio .custom-control-input:disabled:checked~.custom-control-label::before {
-  background-color: #e9ecef;
-}
-
-.form-check-add {
-  background-color: transparent;
-  width: 1.2em;
-  height: 1.2em;
-  border: 2px solid #9E9E9E;
-  border-radius: 50%;
-  cursor: pointer;
-  color: gray;
-  line-height: 0.6em;
-  margin: 0;
-  padding: 0;
 }
 
 .delete {
@@ -81,7 +64,7 @@ input[type="text"]:focus {
   background-position: center;
   height: 1rem;
   width: 1rem;
-  border: 2px solid gray;
+  border: 1px solid gray;
   border-radius: .5rem;
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <input type="number" :placeholder="props.placeholder" :value="props.value" :disabled="props.mode == 'edit' || props.mode == 'read'"></input>
+  <input type="number" :placeholder="props.placeholder" :value="props.value" :disabled="props.mode != 'answer'"></input>
 </template>
 
 <style scoped>
@@ -11,8 +11,8 @@ input {
   padding: 10px;
 }
 
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button {  
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
    opacity: 1;
 }
 </style>

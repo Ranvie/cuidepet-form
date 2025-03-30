@@ -1,8 +1,11 @@
 <template>
     <div class="form-card">
       <div class="title">
-        <p class="trash-bin"></p>
-        <h2>{{ props.inputIndex+1 }}. <input type="text" v-model="props.title"></h2>
+        <div class="trash-bin" @click="emits('deleteInput', props.pageIndex, props.inputIndex)" v-if="props.mode == 'edit'"></div>
+        <h2>
+          {{ props.inputIndex+1 }}. <span v-if="props.mode != 'edit'">{{ props.title }}</span> 
+          <input v-if="props.mode == 'edit'" class="title-input" type="text" v-model="props.title">
+        </h2>
       </div>
       <component
         :is="getInput(props.type)"
@@ -13,22 +16,20 @@
         :options="props.options"
         class="input"
       />
-      <div>
-        <div class="custom-control custom-switch">
-          <input type="checkbox" class="custom-control-input" id="customSwitch1">
-          <label class="custom-control-label" for="customSwitch1">Toggle this switch element</label>
-        </div>
+      <div class="other-controls" v-if="props.mode == 'edit'">
+        <SelectInputComponent :type="props.type" @changeInput="(input) => emits('changeInput', props.pageIndex, props.inputIndex, input)"/>
+        <SwitchComponent />
       </div>
     </div>
 </template>
 
 <style scoped>
-input {
+.title-input {
   border: 0;
   min-width: 95%;
 }
 
-input[type="text"]:focus {
+.title-input:focus {
   outline: 0;
   border-bottom: 1px solid black;
 }
@@ -74,13 +75,21 @@ input[type="text"]:focus {
 }
 
 .trash-bin:hover {
+  cursor: pointer;
   background-color: red;
+}
+
+.other-controls {
+  display: flex;
+  justify-content: end;
+  margin-top: 20px;
+  gap: 40px;
 }
 </style>
 
 <script setup lang="js">
 
-import { defineProps, defineEmits, onMounted } from 'vue';
+import { defineProps, defineEmits } from 'vue';
 
 import TextComponent        from '@/components/inputs/TextComponent.vue';
 import TextAreaComponent    from '@/components/inputs/TextAreaComponent.vue';
@@ -89,7 +98,9 @@ import CheckboxComponent    from '@/components/inputs/CheckboxComponent.vue';
 import RadioComponent       from '@/components/inputs/RadioComponent.vue';
 import DropdownComponent    from '@/components/inputs/DropdownComponent.vue';
 import DateComponent        from '@/components/inputs/DateComponent.vue';
+
 import SelectInputComponent from '@/components/inputs/SelectInputComponent.vue';
+import SwitchComponent      from '@/components/inputs/SwitchComponent.vue';
 
 const props = defineProps({
   type: {
@@ -115,7 +126,7 @@ const props = defineProps({
     type: Boolean
   },
   inputIndex: {
-    default: 1,
+    default: 0,
     type: Number
   },
   pageIndex: {
@@ -129,19 +140,19 @@ const props = defineProps({
 })
 
 const emits = defineEmits({
-  changeInput: Number,
-  deleteQuestion: Number
+  changeInput: String,
+  deleteInput: Number
 })
 
 function setInputs(){
-  const inputs = [];
-  inputs['text']        = TextComponent;
-  inputs['textarea']    = TextAreaComponent;
-  inputs['number']      = NumberComponent;
-  inputs['checkbox']    = CheckboxComponent;
-  inputs['radio']       = RadioComponent;
-  inputs['dropdown']    = DropdownComponent;
-  inputs['date']        = DateComponent;
+  const inputs       = [];
+  inputs['text']     = TextComponent;
+  inputs['textarea'] = TextAreaComponent;
+  inputs['number']   = NumberComponent;
+  inputs['checkbox'] = CheckboxComponent;
+  inputs['radio']    = RadioComponent;
+  inputs['dropdown'] = DropdownComponent;
+  inputs['date']     = DateComponent;
 
   return inputs;
 }
@@ -149,6 +160,6 @@ function setInputs(){
 function getInput(input) {
   const inputs = setInputs();
 
-  return inputs[input.toLowerCase()] ?? SelectInputComponent;
+  return inputs[input.toLowerCase()] ?? TextComponent;
 }
 </script>

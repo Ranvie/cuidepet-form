@@ -22,6 +22,7 @@
   background: white;
   font-size: 0.8em;
   user-select: none;
+  z-index: 100;
 }
 
 .select-custom::after {
@@ -38,10 +39,6 @@
 .disabled {
   background-color: #fafafa;
   cursor: auto;
-}
-
-.disabled::after {
-  content: "";
 }
 
 .selected {
