@@ -1,5 +1,5 @@
 <template>
-  <input type="date" name="text" :value="props.value" :class="props.mode != 'answer' ? 'disabled' : ''"></input>
+  <input type="date" name="text" v-model="propValue" :class="propMode != 'answer' ? 'disabled' : ''"></input>
 </template>
 
 <style scoped>
@@ -23,29 +23,12 @@ input[type="date"].disabled {
 </style>
 
 <script setup lang="js">
+import { defineModel } from 'vue';
 
-import { defineProps } from 'vue';
+const propPlaceholder = defineModel('placeholder', { default: '', type: String });
+const propValue       = defineModel('value', { default: '', type: String });
+const propOptions     = defineModel('options', { default: [], type: Array });
+const propMode        = defineModel('mode', { default: 'read', type: String });
+const propRequired    = defineModel('required', { default: false, type: Boolean });
 
-const props = defineProps({
-  placeholder: {
-    default: '',
-    type: String
-  },
-  value: {
-    default: '',
-    type: String
-  },
-  options: {
-    default: [],
-    type: Array
-  },
-  mode: {
-    default: 'read',
-    type: String
-  },
-  required: {
-    default: false,
-    type: Boolean
-  }
-});
 </script>

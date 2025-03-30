@@ -3,22 +3,22 @@
       <div class="title">
         <div class="trash-bin" @click="emits('deleteInput', props.pageIndex, props.inputIndex)" v-if="props.mode == 'edit'"></div>
         <h2>
-          {{ props.inputIndex+1 }}. <span v-if="props.mode != 'edit'">{{ props.title }}</span> 
-          <input v-if="props.mode == 'edit'" class="title-input" type="text" v-model="props.title">
+          {{ props.inputIndex+1 }}. <span v-if="props.mode != 'edit'">{{ propTitle }}</span> 
+          <input v-if="props.mode == 'edit'" class="title-input" type="text" v-model="propTitle">
         </h2>
       </div>
       <component
-        :is="getInput(props.type)"
-        :placeholder="props.placeholder"
-        :value="props.value"
-        :mode="props.mode"
-        :required="props.required"
-        :options="props.options"
         class="input"
+        :is="getInput(props.type)"
+        v-model:placeholder="propPlaceholder"
+        v-model:value="propValue"
+        v-model:mode="props.mode"
+        v-model:required="propRequired"
+        v-model:options="propOptions"
       />
       <div class="other-controls" v-if="props.mode == 'edit'">
         <SelectInputComponent :type="props.type" @changeInput="(input) => emits('changeInput', props.pageIndex, props.inputIndex, input)"/>
-        <SwitchComponent />
+        <SwitchComponent v-model:required="propRequired"/>
       </div>
     </div>
 </template>
@@ -89,7 +89,7 @@
 
 <script setup lang="js">
 
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineModel, defineEmits } from 'vue';
 
 import TextComponent        from '@/components/inputs/TextComponent.vue';
 import TextAreaComponent    from '@/components/inputs/TextAreaComponent.vue';
@@ -102,13 +102,15 @@ import DateComponent        from '@/components/inputs/DateComponent.vue';
 import SelectInputComponent from '@/components/inputs/SelectInputComponent.vue';
 import SwitchComponent      from '@/components/inputs/SwitchComponent.vue';
 
+const propTitle       = defineModel('title', { default: 'Título da pergunta', type: String })
+const propOptions     = defineModel('options', { default: [], type: Array })
+const propValue       = defineModel('value', { default: '' })
+const propPlaceholder = defineModel('placeholder', { default: '' })
+const propRequired    = defineModel('required', { default: false, type: Boolean })
+
 const props = defineProps({
   type: {
     default: 'text',
-    type: String
-  },
-  title: {
-    default: 'Título da pergunta',
     type: String
   },
   options: {
@@ -141,7 +143,7 @@ const props = defineProps({
 
 const emits = defineEmits({
   changeInput: String,
-  deleteInput: Number
+  deleteInput: String
 })
 
 function setInputs(){

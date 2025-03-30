@@ -1,6 +1,6 @@
 <template>
   <div class="form-check form-switch">
-    <input class="form-check-input" type="checkbox" role="switch" :id="'switch-required-'+uid">
+    <input class="form-check-input" type="checkbox" role="switch" :id="'switch-required-'+uid" v-model="propRequired">
     <label class="form-check-label" :for="'switch-required-'+uid">Obrigatório</label>
   </div>
 </template>
@@ -24,7 +24,9 @@ label {
 </style>
 
 <script setup lang="js">
-import { onMounted, getCurrentInstance, ref } from 'vue';
+import { onMounted, getCurrentInstance, ref, defineModel } from 'vue';
+
+const propRequired = defineModel('required', { default: false, type: Boolean })
 
 const uid = ref();
 onMounted(() => {

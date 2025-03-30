@@ -1,5 +1,5 @@
 <template>
-  <input type="text" name="text" :placeholder="props.placeholder" :value="props.value" :disabled="props.mode != 'answer'"></input>
+  <input type="text" name="text" :placeholder="propPlaceholder" v-model="propValue" :disabled="propMode != 'answer'"></input>
 </template>
 
 <style scoped>
@@ -12,29 +12,12 @@ input {
 </style>
 
 <script setup lang="js">
+import { defineModel } from 'vue';
 
-import { defineProps } from 'vue';
+const propPlaceholder = defineModel('placeholder', { default: '', type: String });
+const propValue       = defineModel('value', { default: '', type: String });
+const propOptions     = defineModel('options', { default: [], type: Array });
+const propMode        = defineModel('mode', { default: 'read', type: String });
+const propRequired    = defineModel('required', { default: false, type: Boolean });
 
-const props = defineProps({
-  placeholder: {
-    default: '',
-    type: String
-  },
-  value: {
-    default: '',
-    type: String
-  },
-  options: {
-    default: [],
-    type: Array
-  },
-  mode: {
-    default: 'read',
-    type: String
-  },
-  required: {
-    default: false,
-    type: Boolean
-  }
-});
 </script>

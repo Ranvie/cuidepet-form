@@ -3,20 +3,31 @@
     <section v-for="(page, pageIndex) in pages" class="page-card">
       <h1>
         <span v-if="props.mode != 'edit'">{{ page.title }}</span>
-        <input v-if="props.mode == 'edit'" class="title-input" type="text" :value="page.title">
+        <input v-if="props.mode == 'edit'" class="title-input" type="text" v-model="page.title">
       </h1>
-      <InputComponent v-for="(input, index) in page.inputs" :type="input.type" :title="input.title"
-        :options="input.options" :value="input.value" :placeholder="input.placeholder" :required="input.required"
-        :inputIndex="index" :pageIndex="pageIndex" :mode="props.mode" @changeInput="changeInput"
-        @deleteInput="deleteInput" />
+      <InputComponent v-for="(input, index) in page.inputs"
+        v-model:title="input.title"
+        v-model:options="input.options"
+        v-model:value="input.value" 
+        v-model:placeholder="input.placeholder" 
+        v-model:required="input.required"
+        
+        :type="input.type"
+        :mode="props.mode"
+        :inputIndex="index"
+        :pageIndex="pageIndex"
+
+        @changeInput="changeInput"
+        @deleteInput="deleteInput" 
+      />
       <div class="add-question" @click="addInput(pageIndex)" v-if="props.mode == 'edit'">
         <div class="plus-box"></div>
         <p>Nova pergunta</p>
       </div>
       <div class="flex-end margin-top">
-        <button v-if="props.mode != 'read'">Cancelar</button>
-        <button v-if="props.mode != 'read'" type="submit">Enviar</button>
-        <button v-if="props.mode == 'read'">Fechar</button>
+        <button v-if="props.mode != 'read'" @click="(e)=>{e.preventDefault();emits('onCancel')}">Cancelar</button>
+        <button v-if="props.mode != 'read'" type="submit" @click="(e)=> {e.preventDefault();emits('onSubmit', JSON.stringify(pages))}">Enviar</button>
+        <button v-if="props.mode == 'read'" @click="(e)=>{e.preventDefault();emits('onCancel')}">Fechar</button>
       </div>
     </section>
   </form>
@@ -114,7 +125,7 @@ button:hover {
 </style>
 
 <script setup lang="js">
-import { defineProps, ref, onMounted } from 'vue';
+import { defineProps, ref, onMounted, defineEmits } from 'vue';
 import InputComponent from '@/components/InputComponent.vue';
 
 const pages = ref();
@@ -128,6 +139,11 @@ const props = defineProps({
     default: 'read',
     type: String
   }
+})
+
+const emits = defineEmits({
+  onCancel: null,
+  onSubmit: String
 })
 
 onMounted(() => {

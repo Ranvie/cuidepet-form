@@ -1,12 +1,15 @@
 <template>
   <div>
     <div class="form-check" v-for="(option, index) in propOptions">
-      <span class="delete" v-on:click="remove(index)" v-if="props.mode == 'edit'">X</span>
-      <input type="checkbox" class="form-check-input" :id="'checkbox-'+uid+'-'+index" :checked="props.mode != 'edit' && isChecked(option)" :disabled="props.mode != 'answer'">
-      <label class="form-check-label" :for="'checkbox-'+uid+'-'+index">{{ props.mode != 'edit' ? option : '' }}</label>
-      <input v-if="props.mode === 'edit'" type="text" v-model="propOptions[index]">
+      <span class="delete" v-on:click="remove(index)" v-if="propMode == 'edit'">X</span>
+      <input 
+        type="checkbox" class="form-check-input" :id="'checkbox-'+uid+'-'+index" :checked="propMode != 'edit' && isChecked(option)" 
+        :disabled="propMode != 'answer'" @click="selectionChanged(option)"
+      >
+      <label class="form-check-label" :for="'checkbox-'+uid+'-'+index">{{ propMode != 'edit' ? option : '' }}</label>
+      <input v-if="propMode === 'edit'" type="text" v-model="propOptions[index]">
     </div>
-    <div class="add" v-on:click="add()" v-if="props.mode == 'edit'">
+    <div class="add" v-on:click="add()" v-if="propMode == 'edit'">
       <div class="add-plus"></div>
       <div class="add-label">Adicionar</div>
     </div>
@@ -84,41 +87,19 @@ input[type="text"]:focus {
 </style>
 
 <script setup lang="js">
-import { defineProps, ref, getCurrentInstance, onMounted } from 'vue';
+import { ref, getCurrentInstance } from 'vue';
 
 const instance = getCurrentInstance();
 const uid = ref(instance.uid);
 
-const propOptions = ref();
-const props = defineProps({
-  placeholder: {
-    default: '',
-    type: String
-  },
-  value: {
-    default: [],
-    type: Array
-  },
-  options: {
-    default: ['Nova opção'],
-    type: Array
-  },
-  mode: {
-    default: 'read',
-    type: String
-  },
-  required: {
-    default: false,
-    type: Boolean
-  }
-});
-
-onMounted(() => {
-  propOptions.value = props.options;
-})
+const propPlaceholder = defineModel('placeholder', { default: '', type: String });
+const propValue       = defineModel('value', { default: [], type: Array });
+const propOptions     = defineModel('options', { default: ['Nova opção'], type: Array });
+const propMode        = defineModel('mode', { default: 'read', type: String });
+const propRequired    = defineModel('required', { default: false, type: Boolean });
 
 function isChecked(option) {
-  return props.value.includes(option) ? true : false;
+  return propValue.value.includes(option) ? true : false;
 }
 
 function add() {
@@ -127,5 +108,15 @@ function add() {
 
 function remove(index) {
   propOptions.value.splice(index, 1);
+}
+
+function selectionChanged(option) {
+  const index = propValue.value.indexOf(option);
+  
+  if (index === -1) {
+    propValue.value.push(option);
+  } else {
+    propValue.value.splice(index, 1);
+  }
 }
 </script>

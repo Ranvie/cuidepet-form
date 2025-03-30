@@ -1,5 +1,5 @@
 <template>
-  <QuestionComponent :jsonForm="json" mode="edit" />
+  <QuestionComponent :jsonForm="json" mode="answer" @onCancel="console.log('Cancelou')" @onSubmit="(data) => console.log(data)"/>
 </template>
 
 <style scoped>

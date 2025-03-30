@@ -1,12 +1,12 @@
 <template>
-  <div ref="select" class="select-custom" :class="props.mode == 'read' ? 'disabled' : ''">
+  <div ref="select" class="select-custom" :class="propMode == 'read' ? 'disabled' : ''">
     <div ref="selected" class="selected"></div>
     <div ref="optionsDiv" class="options">
       <div ref="options" v-for="(option, index) in propOptions" class="option">
-        <span v-on:click="(e) => { e.stopPropagation();remove(index) }" class="delete" v-if="props.mode == 'edit'">X</span>
+        <span v-on:click="(e) => { e.stopPropagation();remove(index) }" class="delete" v-if="propMode == 'edit'">X</span>
         <span>{{ option }}</span>
       </div>
-      <input ref="newOptionInput" type="text" placeholder="Nova opção..." class="custom-input" v-if="props.mode == 'edit'">
+      <input ref="newOptionInput" type="text" placeholder="Nova opção..." class="custom-input" v-if="propMode == 'edit'">
     </div>
   </div>
 </template>
@@ -84,7 +84,7 @@
 </style>
 
 <script setup lang="js">
-import { defineProps, onMounted, ref, watch } from 'vue';
+import { defineModel, onMounted, ref, watch } from 'vue';
 
 const select         = ref();
 const selected       = ref();
@@ -92,34 +92,14 @@ const optionsDiv     = ref();
 const options        = ref([]);
 const newOptionInput = ref();
 
-const propOptions = ref();
-const props = defineProps({
-  placeholder: {
-    default: '',
-    type: String
-  },
-  value: {
-    default: '',
-    type: String
-  },
-  options: {
-    default: [],
-    type: Array
-  },
-  mode: {
-    default: 'read',
-    type: String
-  },
-  required: {
-    default: false,
-    type: Boolean
-  }
-});
+const propPlaceholder = defineModel('placeholder', { default: '', type: String });
+const propValue       = defineModel('value', { default: '', type: String });
+const propOptions     = defineModel('options', { default: [], type: Array });
+const propMode        = defineModel('mode', { default: 'read', type: String });
+const propRequired    = defineModel('required', { default: false, type: Boolean });
 
 onMounted(() => {
-  propOptions.value = props.options;
-
-  switch(props.mode) {
+  switch(propMode.value) {
     case 'answer':
       setOnSelectClick();
       setOnOptionClick();
@@ -135,7 +115,7 @@ onMounted(() => {
 })
 
 watch(propOptions, (newVal, oldVal) => {
-  if(props.mode != 'answer') return;
+  if(propMode != 'answer') return;
 
   setTimeout(() => {
     setInputOptionListeners();
@@ -174,15 +154,16 @@ function setInputOptionListeners() {
 
     option.addEventListener("click", () => {
       selected.value.textContent = option.textContent;
+      propValue.value = option.textContent;
     });
   }
 }
 
 function getInitialValue() {
   setTimeout(() => {
-    if (propOptions.value.includes(props.value)) { selected.value.textContent = props.value; return; }
+    if (propOptions.value.includes(propValue.value)) { selected.value.textContent = propValue.value; return; }
   
-    selected.value.textContent = props.placeholder;
+    selected.value.textContent = propPlaceholder.value;
   }, 1)
 }
 
