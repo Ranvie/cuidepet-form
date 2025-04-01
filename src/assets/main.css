@@ -11,3 +11,15 @@
   display: flex;
   justify-content: flex-end;
 }
+
+.red {
+  color: red;
+}
+
+.alert-box {
+  font-size: 0.7em;
+  background-color: transparent;
+  color: red;
+  padding: 0px 15px;
+  font-weight: bold;
+}

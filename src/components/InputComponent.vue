@@ -3,12 +3,13 @@
       <div class="title">
         <div class="trash-bin" @click="emits('deleteInput', props.pageIndex, props.inputIndex)" v-if="props.mode == 'edit'"></div>
         <h2>
-          {{ props.inputIndex+1 }}. <span v-if="props.mode != 'edit'">{{ propTitle }}</span> 
+          {{ props.inputIndex+1 }}. <span v-if="props.mode != 'edit'">{{ propTitle }} <span class="red">{{ propRequired ? '*' : '' }}</span></span> 
           <input v-if="props.mode == 'edit'" class="title-input" type="text" v-model="propTitle">
         </h2>
       </div>
       <component
         class="input"
+        :class="props.mode != 'edit' ? 'fix-spacing' : ''"
         :is="getInput(props.type)"
         v-model:placeholder="propPlaceholder"
         v-model:value="propValue"
@@ -62,6 +63,10 @@
   cursor: pointer;
   font-weight: bolder;
   color: gray;
+}
+
+.fix-spacing {
+  margin-left: calc(var(--input-spacing) - 28px) !important;
 }
 
 .trash-bin {

@@ -6,9 +6,10 @@
         <input v-if="props.mode == 'edit'" class="title-input" type="text" v-model="page.title">
       </h1>
       <InputComponent v-for="(input, index) in page.inputs"
+        :id="'question-page'+pageIndex+'-input'+index"
         v-model:title="input.title"
         v-model:options="input.options"
-        v-model:value="input.value" 
+        v-model:value="input.value"
         v-model:placeholder="input.placeholder" 
         v-model:required="input.required"
         
@@ -18,7 +19,7 @@
         :pageIndex="pageIndex"
 
         @changeInput="changeInput"
-        @deleteInput="deleteInput" 
+        @deleteInput="deleteInput"
       />
       <div class="add-question" @click="addInput(pageIndex)" v-if="props.mode == 'edit'">
         <div class="plus-box"></div>
@@ -26,7 +27,7 @@
       </div>
       <div class="flex-end margin-top">
         <button v-if="props.mode != 'read'" @click="(e)=>{e.preventDefault();emits('onCancel')}">Cancelar</button>
-        <button v-if="props.mode != 'read'" type="submit" @click="(e)=> {e.preventDefault();emits('onSubmit', JSON.stringify(pages))}">Enviar</button>
+        <button v-if="props.mode != 'read'" type="submit" @click="submitForm">Enviar</button>
         <button v-if="props.mode == 'read'" @click="(e)=>{e.preventDefault();emits('onCancel')}">Fechar</button>
       </div>
     </section>
@@ -164,8 +165,86 @@ function changeInput(pageIndex, inputIndex, input) {
 
 function getNewInputSelector(input) {
   return { 
-    "title": "Título da pergunta", "type": input, "placeholder": "",
+    "title": "Título da pergunta", "type": input, "placeholder": "", "options": [],
     "value": input == 'radio' || input == 'checkbox' ? [] : '', "required": false
   };
+}
+
+function submitForm(e) {
+  e.preventDefault();
+  
+  clearValuesIfEditMode();
+  clearAlerts();
+  
+  const isErrors = hasErrors(validateRequiredAnswers());
+  if(isErrors) return;
+
+  emits('onSubmit', JSON.stringify({'pages':pages.value}));
+}
+
+function clearValuesIfEditMode() {
+  if(props.mode != 'edit') return;
+
+  for(const page of pages.value) {
+    for(const input of page.inputs) {
+      input.value = clearInputValue(input.type);
+    }
+  }
+}
+
+function clearInputValue(inputType) {
+  let cleaned = '';
+  
+  switch(inputType) {
+    case 'checkbox':
+    case 'radio':
+      cleaned = [];
+      break;
+  }
+
+  return cleaned;
+}
+
+function validateRequiredAnswers() {
+  const empty = [];
+  if(props.mode == 'edit') return empty;
+  
+  for(const pageIndex in pages.value) {
+    for(const inputIndex in pages.value[pageIndex].inputs) {
+      const input = pages.value[pageIndex].inputs[inputIndex];
+      if(input.required && (!input.value || input.value.length == 0)){
+        empty.push({'page':pageIndex, 'input': inputIndex});
+      }
+    }
+  }
+
+  return empty;
+}
+
+function hasErrors(errors = []) {
+  if(errors.length == 0) return false;
+
+  const errorInput = document.getElementById(`question-page${errors[0].page}-input${errors[0].input}`);
+  errorInput.scrollIntoView({ behavior: "smooth", block: 'center' });
+  for(const error of errors) {
+    const errorInput = document.getElementById(`question-page${error.page}-input${error.input}`);
+    showAlert(errorInput, 'Este campo é obrigatório');
+  }
+
+  return true;
+}
+
+function clearAlerts() {
+  document.querySelectorAll('.alert-box').forEach(el => el.remove());
+}
+
+function showAlert(element, mensagem) {
+  if (element) {
+    var alertDiv = document.createElement("div");
+    alertDiv.classList.add('alert-box');
+    alertDiv.textContent = mensagem;
+
+    element.appendChild(alertDiv);
+  }
 }
 </script>

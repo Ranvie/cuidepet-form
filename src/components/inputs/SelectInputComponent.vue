@@ -11,7 +11,7 @@
 div::after {
   content: "▼";
   position: relative;
-  left: -15px;
+  left: -20px;
   font-size: 0.7rem;
   pointer-events: none;
 }
@@ -22,11 +22,9 @@ select {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  padding-left: 10px !important;
-  padding-right: 20%;
-  text-indent: 0.01px;
   width: 11rem;
   text-overflow: ellipsis;
+  text-align: center;
 }
 
 select:hover {
