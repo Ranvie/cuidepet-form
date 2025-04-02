@@ -3,10 +3,12 @@
     <div ref="selected" class="selected"></div>
     <div ref="optionsDiv" class="options">
       <div ref="options" v-for="(option, index) in propOptions" class="option">
-        <span v-on:click="(e) => { e.stopPropagation();remove(index) }" class="delete" v-if="propMode == 'edit'">X</span>
+        <span @click="(e) => { e.stopPropagation();remove(index) }" class="delete" v-if="propMode == 'edit'">X</span>
         <span>{{ option }}</span>
       </div>
-      <input ref="newOptionInput" type="text" placeholder="Nova opção..." class="custom-input" v-if="propMode == 'edit'">
+      <input ref="newOptionInput" type="text" placeholder="Nova opção..." class="custom-input" 
+        @click="(e) => { e.stopPropagation(); setOnNewOptionInput() }" v-if="propMode == 'edit' && addAllowed()"
+      >
     </div>
   </div>
 </template>
@@ -92,11 +94,12 @@ const optionsDiv     = ref();
 const options        = ref([]);
 const newOptionInput = ref();
 
-const propPlaceholder = defineModel('placeholder', { default: '', type: String });
-const propValue       = defineModel('value', { default: '', type: String });
-const propOptions     = defineModel('options', { default: [], type: Array });
-const propMode        = defineModel('mode', { default: 'read', type: String });
-const propRequired    = defineModel('required', { default: false, type: Boolean });
+const propPlaceholder  = defineModel('placeholder', { default: '', type: String });
+const propValue        = defineModel('value', { default: '', type: String });
+const propOptions      = defineModel('options', { default: [], type: Array });
+const propMode         = defineModel('mode', { default: 'read', type: String });
+const propRequired     = defineModel('required', { default: false, type: Boolean });
+const propOptionsLimit = defineModel('optionsLimit', { default: 10, type: Number });
 
 onMounted(() => {
   switch(propMode.value) {
@@ -132,7 +135,7 @@ function setOnNewOptionInput() {
   newOptionInput.value.addEventListener("click", (e) => e.stopPropagation());
   newOptionInput.value.addEventListener("focusout", () => {
     const value = newOptionInput.value.value;
-    if(value == '') return;
+    if(value == '' || !addAllowed()) return;
     
     propOptions.value.push(value);
     newOptionInput.value.value = '';
@@ -169,6 +172,10 @@ function getInitialValue() {
 
 function remove(index) {
   propOptions.value.splice(index, 1);
+}
+
+function addAllowed() {
+  return propOptions.value.length < propOptionsLimit.value;
 }
 
 </script>

@@ -9,7 +9,7 @@
       <label class="form-check-label" :for="'checkbox-'+uid+'-'+index">{{ propMode != 'edit' ? option : '' }}</label>
       <input v-if="propMode === 'edit'" type="text" v-model="propOptions[index]">
     </div>
-    <div class="add" v-on:click="add()" v-if="propMode == 'edit'">
+    <div class="add" v-on:click="add()" v-if="propMode == 'edit' && addAllowed()">
       <div class="add-plus"></div>
       <div class="add-label">Adicionar</div>
     </div>
@@ -92,17 +92,20 @@ import { ref, getCurrentInstance } from 'vue';
 const instance = getCurrentInstance();
 const uid = ref(instance.uid);
 
-const propPlaceholder = defineModel('placeholder', { default: '', type: String });
-const propValue       = defineModel('value', { default: [], type: Array });
-const propOptions     = defineModel('options', { default: ['Nova opção'], type: Array });
-const propMode        = defineModel('mode', { default: 'read', type: String });
-const propRequired    = defineModel('required', { default: false, type: Boolean });
+const propPlaceholder  = defineModel('placeholder', { default: '', type: String });
+const propValue        = defineModel('value', { default: [], type: Array });
+const propOptions      = defineModel('options', { default: ['Nova opção'], type: Array });
+const propMode         = defineModel('mode', { default: 'read', type: String });
+const propRequired     = defineModel('required', { default: false, type: Boolean });
+const propOptionsLimit = defineModel('optionsLimit', { default: 10, type: Number });
 
 function isChecked(option) {
   return propValue.value.includes(option) ? true : false;
 }
 
 function add() {
+  if(!addAllowed()) return;
+
   propOptions.value.push('Nova opção');
 }
 
@@ -118,5 +121,9 @@ function selectionChanged(option) {
   } else {
     propValue.value.splice(index, 1);
   }
+}
+
+function addAllowed() {
+  return propOptions.value.length < propOptionsLimit.value;
 }
 </script>

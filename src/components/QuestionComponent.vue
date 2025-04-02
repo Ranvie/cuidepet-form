@@ -12,6 +12,7 @@
         v-model:value="input.value"
         v-model:placeholder="input.placeholder" 
         v-model:required="input.required"
+        v-model:optionsLimit="props.optionsLimit"
         
         :type="input.type"
         :mode="props.mode"
@@ -21,7 +22,7 @@
         @changeInput="changeInput"
         @deleteInput="deleteInput"
       />
-      <div class="add-question" @click="addInput(pageIndex)" v-if="props.mode == 'edit'">
+      <div class="add-question" @click="addInput(pageIndex)" v-if="props.mode == 'edit' && addAllowed(pageIndex)">
         <div class="plus-box"></div>
         <p>Nova pergunta</p>
       </div>
@@ -139,6 +140,14 @@ const props = defineProps({
   mode: { //edit, answer, read
     default: 'read',
     type: String
+  },
+  questionLimit: {
+    default: 10,
+    type: Number
+  },
+  optionsLimit: {
+    default: 10,
+    type: Number
   }
 })
 
@@ -156,6 +165,8 @@ function deleteInput(pageIndex, inputIndex) {
 }
 
 function addInput(pageIndex, input = 'text') {
+  if(!addAllowed(pageIndex)) return;
+
   pages.value[pageIndex].inputs.push(getNewInputSelector(input));
 }
 
@@ -246,5 +257,9 @@ function showAlert(element, mensagem) {
 
     element.appendChild(alertDiv);
   }
+}
+
+function addAllowed(pageIndex) {
+  return pages.value[pageIndex].inputs.length < props.questionLimit;
 }
 </script>
