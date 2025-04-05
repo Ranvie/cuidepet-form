@@ -1,14 +1,27 @@
 {
-  "name": "vue",
-  "version": "0.0.0",
+  "name": "easy-form",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
+  "main": "./dist/easy-form.umd.js",
+  "module": "./dist/easy-form.es.js",
+  "files": ["dist"],
+  "exports": {
+    ".": {
+      "import": "./dist/easy-form.es.js",
+      "require": "./dist/easy-form.umd.js"
+    },
+    "./dist/easy-form.css": "./dist/easy-form.css"
+  },
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
+    "vue": "^3.5.13"
+  },
+  "peerDependencies": {
     "vue": "^3.5.13"
   },
   "devDependencies": {
