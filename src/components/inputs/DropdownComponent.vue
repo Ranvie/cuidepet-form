@@ -62,7 +62,7 @@
 .option, .custom-input {
   padding: 10px;
   display: block;
-  width: calc(100% - 20px);
+  width: 100%;
 }
 
 .option:hover {

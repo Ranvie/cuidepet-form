@@ -4,6 +4,7 @@
     mode="edit"
     @onCancel="console.log('Cancelou')"
     @onSubmit="(data) => console.log(data)"
+    @onReport="console.log('Denunciou')"
   />
 </template>
 

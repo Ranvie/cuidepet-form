@@ -26,10 +26,16 @@
         <div class="plus-box"></div>
         <p>Nova pergunta</p>
       </div>
-      <div class="flex-end margin-top">
-        <button v-if="props.mode != 'read'" @click="(e)=>{e.preventDefault();emits('onCancel')}">Cancelar</button>
-        <button v-if="props.mode != 'read'" type="submit" @click="submitForm">Enviar</button>
-        <button v-if="props.mode == 'read'" @click="(e)=>{e.preventDefault();emits('onCancel')}">Fechar</button>
+      <div class="actions-row margin-top">
+        <div v-if="props.reportable" class="report-button" @click="(e)=>{e.preventDefault();emits('onReport')}">
+          <img src="../components/icons/megaphone.svg" alt="Denunciar" />
+          <span>Denunciar</span>
+        </div>
+        <div class="action-buttons">
+          <button v-if="props.mode != 'read'" @click="(e)=>{e.preventDefault();emits('onCancel')}">Cancelar</button>
+          <button v-if="props.mode != 'read'" type="submit" @click="submitForm">Enviar</button>
+          <button v-if="props.mode == 'read'" @click="(e)=>{e.preventDefault();emits('onCancel')}">Fechar</button>
+        </div>
       </div>
     </section>
   </form>
@@ -86,6 +92,41 @@ button:hover {
   margin-top: 150px;
 }
 
+.actions-row {
+  display: flex;
+  justify-content: v-bind(alignButtons);
+  align-items: center;
+}
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+}
+
+.report-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  color: gray;
+}
+
+.report-button img {
+  width: 20px;
+  height: 20px;
+  opacity: 0.6;
+}
+
+.report-button span {
+  text-decoration: underline;
+  font-size: 0.9em;
+  color: gray;
+}
+
+.report-button:hover span {
+  color: #555;
+}
+
 .add-question {
   display: flex;
   gap: 5px;
@@ -127,10 +168,14 @@ button:hover {
 </style>
 
 <script setup lang="js">
-import { defineProps, ref, onMounted, defineEmits } from 'vue';
+import { defineProps, ref, onMounted, defineEmits, computed } from 'vue';
 import InputComponent from '@/components/InputComponent.vue';
 
 const pages = ref();
+
+const alignButtons = computed(() => {
+  return props.reportable ? 'space-between' : 'flex-end';
+})
 
 const props = defineProps({
   jsonForm: {
@@ -148,11 +193,16 @@ const props = defineProps({
   optionsLimit: {
     default: 10,
     type: Number
+  },
+  reportable: {
+    default: false,
+    type: Boolean
   }
 })
 
 const emits = defineEmits({
   onCancel: null,
+  onReport: null,
   onSubmit: String
 })
 
