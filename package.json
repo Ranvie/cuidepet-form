@@ -1,7 +1,6 @@
 {
   "name": "easy-form",
   "version": "1.0.0",
-  "private": true,
   "type": "module",
   "main": "./dist/easy-form.umd.js",
   "module": "./dist/easy-form.es.js",
